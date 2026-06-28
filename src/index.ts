@@ -1,4 +1,36 @@
 export { parseDurationWindow } from "./core/duration.js";
+export {
+  createDuplicateCandidateMap,
+  findDuplicateCandidates,
+  type DuplicateCandidate,
+  type DuplicateCandidateOptions,
+} from "./analysis/duplicate-candidates.js";
+export { composeIssueRecommendation, type ComposeIssueRecommendationInput } from "./analysis/recommendations.js";
+export {
+  runSecurityPrecheck,
+  type SecurityPrecheckResult,
+} from "./analysis/security-precheck.js";
+export {
+  classifyIssueContract,
+  classifyIssueInputSchema,
+  draftReplyContract,
+  draftReplyInputSchema,
+  escalateSecurityContract,
+  escalateSecurityInputSchema,
+  findDuplicateContract,
+  findDuplicateInputSchema,
+  requestReproductionContract,
+  requestReproductionInputSchema,
+  suggestLabelsContract,
+  suggestLabelsInputSchema,
+  triageToolContracts,
+  type ClassifyIssueInput,
+  type DraftReplyInput,
+  type EscalateSecurityInput,
+  type FindDuplicateInput,
+  type RequestReproductionInput,
+  type SuggestLabelsInput,
+} from "./analysis/tool-contracts.js";
 export { renderHelp } from "./cli/help.js";
 export {
   parseCliArgs,

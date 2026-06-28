@@ -553,7 +553,29 @@ tool-call-contract validate --help
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Added `src/analysis/duplicate-candidates.ts` with deterministic token weighting,
+  candidate scoring, top-N selection, and issue-to-candidates map creation.
+- Added `src/analysis/security-precheck.ts` with deterministic high/medium confidence
+  security indicator detection across issue title, body, and comments.
+- Added `src/analysis/tool-contracts.ts` with `tool-call-contract` contracts for
+  `classify_issue`, `suggest_labels`, `find_duplicate`, `request_reproduction`,
+  `draft_reply`, and `escalate_security`.
+- Added `src/analysis/recommendations.ts` to compose validated tool decisions into a
+  single `IssueRecommendation` with conservative defaults for missing optional decisions.
+- Added `tool-call-contract.config.ts` with triage contracts, raw/regression capture
+  suites, and initial redaction paths.
+- Exported Phase 6 helpers, contracts, schemas, and types from `src/index.ts`.
+- Added duplicate candidate tests, security precheck tests, tool contract export and
+  validation tests, and recommendation composition tests.
+- `npm test -- tests/duplicate-candidates.test.ts tests/security-precheck.test.ts tests/tool-contracts.test.ts`
+  passed: 10 tests across 3 test files.
+- `npm run typecheck` passed.
+- `npm run lint` passed.
+- `npm test` passed: 71 tests across 17 test files.
+- `npm run build` passed.
+- `./node_modules/.bin/tool-call-contract validate --help` passed.
+- `./node_modules/.bin/tool-call-contract check` passed with no findings.
 
 ## Phase 7: OpenAI Responses Analyzer
 
