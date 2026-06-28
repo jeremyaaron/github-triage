@@ -1,6 +1,10 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { createDuplicateCandidateMap } from "../analysis/duplicate-candidates.js";
+import { createOpenAIResponsesIssueAnalyzer } from "../analysis/analyzer.js";
+import { runSecurityPrecheck, type SecurityPrecheckResult } from "../analysis/security-precheck.js";
+import type { DuplicateCandidate } from "../analysis/duplicate-candidates.js";
 import type { ReviewCliOptions } from "../cli/options.js";
 import type { ReviewRepositoryResult } from "../cli/run.js";
 import { readIssueSourceFile } from "../fixtures/issue-source.js";
@@ -29,6 +33,8 @@ export interface AnalyzeIssueInput {
   repository: RepoSlug;
   repositoryLabels: SourceLabel[];
   issue: SourceIssue;
+  duplicateCandidates: DuplicateCandidate[];
+  securityPrecheck: SecurityPrecheckResult;
 }
 
 export interface IssueAnalyzer {
@@ -70,7 +76,14 @@ export async function reviewRepositoryFromCli(
 
 export async function reviewRepository(options: ReviewOptions): Promise<ReviewResult> {
   const source = await loadReviewSource(options);
-  const analyzer = options.analyzer ?? createConservativeAnalyzer();
+  const analyzer =
+    options.analyzer ??
+    createOpenAIResponsesIssueAnalyzer({
+      ...(options.env ? { env: options.env } : {}),
+      ...(options.model ? { model: options.model } : {}),
+      ...(options.captureDir ? { captureDir: options.captureDir } : {}),
+    });
+  const duplicateCandidatesByIssue = createDuplicateCandidateMap(source.issues);
   const reportIssues = [];
 
   for (const issue of source.issues) {
@@ -79,6 +92,8 @@ export async function reviewRepository(options: ReviewOptions): Promise<ReviewRe
         repository: options.repo,
         repositoryLabels: source.labels,
         issue,
+        duplicateCandidates: duplicateCandidatesByIssue.get(issue.number) ?? [],
+        securityPrecheck: runSecurityPrecheck(issue),
       }),
     );
 
@@ -181,42 +196,4 @@ async function writeReports(
       cause: error,
     });
   }
-}
-
-function createConservativeAnalyzer(): IssueAnalyzer {
-  return {
-    async analyzeIssue(input) {
-      return {
-        issueNumber: input.issue.number,
-        classification: "unclear",
-        confidence: "low",
-        signals: [],
-        suggestedLabels: [],
-        missingInformation: [
-          {
-            kind: "reproduction",
-            question: "Can you share the smallest reproduction and the exact behavior you expected?",
-          },
-        ],
-        relatedIssues: [],
-        draftReply: {
-          body: "Thanks for the report. Can you share the smallest reproduction and the exact behavior you expected?",
-          rationale: "The offline fallback analyzer does not have enough context for a specific maintainer response.",
-        },
-        security: {
-          sensitive: false,
-          confidence: "low",
-          rationale: "The offline fallback analyzer does not perform security classification.",
-          publicReplyAllowed: true,
-        },
-        rationale: "Offline fallback recommendation used until model analysis is configured.",
-        warnings: [
-          {
-            code: "analysis.offline-fallback",
-            message: "Used conservative offline fallback analyzer.",
-          },
-        ],
-      };
-    },
-  };
 }

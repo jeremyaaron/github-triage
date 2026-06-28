@@ -106,37 +106,60 @@ describe("offline review orchestration", () => {
     } satisfies Partial<GithubTriageError>);
   });
 
-  it("runs through the CLI with --issues-file", async () => {
+  it("runs through the CLI with --issues-file and an injected review dependency", async () => {
     const dir = await mkdtemp(path.join(os.tmpdir(), "github-triage-cli-"));
     const fixturePath = path.join(dir, "issues.json");
     const outputDir = path.join(dir, "reports");
     await writeFile(fixturePath, JSON.stringify(createFixtureDocument()), "utf8");
 
-    const result = await runCli(
-      [
-        "review",
-        "jeremyaaron/pkg-guard",
-        "--since",
-        "30d",
-        "--issues-file",
-        fixturePath,
-        "--output-dir",
-        outputDir,
-        "--report-id",
-        "test",
-      ],
-      { now },
-    );
+    const args = [
+      "review",
+      "jeremyaaron/pkg-guard",
+      "--since",
+      "30d",
+      "--issues-file",
+      fixturePath,
+      "--output-dir",
+      outputDir,
+      "--report-id",
+      "test",
+    ];
+    const result = await runCli(args, {
+      now,
+      reviewRepository: async (options) => {
+        const review = await reviewRepository({
+          ...options,
+          clock: () => now,
+          analyzer: createFakeAnalyzer(),
+        });
+        return { stdout: review.stdout };
+      },
+    });
 
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
     expect(result.stdout).toContain("Reviewed 1 open issues in jeremyaaron/pkg-guard");
     await expect(readFile(path.join(outputDir, "jeremyaaron-pkg-guard-test.md"), "utf8")).resolves.toContain(
-      "analysis.offline-fallback",
+      "Draft reply:",
     );
     await expect(readFile(path.join(outputDir, "jeremyaaron-pkg-guard-test.json"), "utf8")).resolves.toContain(
-      '"classification": "unclear"',
+      '"classification": "bug"',
     );
+  });
+
+  it("returns an OpenAI auth error for default fixture-mode execution without credentials", async () => {
+    const dir = await mkdtemp(path.join(os.tmpdir(), "github-triage-cli-"));
+    const fixturePath = path.join(dir, "issues.json");
+    await writeFile(fixturePath, JSON.stringify(createFixtureDocument()), "utf8");
+
+    const result = await runCli(
+      ["review", "jeremyaaron/pkg-guard", "--since", "30d", "--issues-file", fixturePath],
+      { now },
+    );
+
+    expect(result.exitCode).toBe(1);
+    expect(result.stderr).toContain("error analysis.auth-missing");
+    expect(result.stderr).toContain("Set OPENAI_API_KEY");
   });
 
   it("returns an auth error when GitHub source is requested without credentials", async () => {

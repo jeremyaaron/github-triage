@@ -1,5 +1,15 @@
 export { parseDurationWindow } from "./core/duration.js";
 export {
+  DEFAULT_OPENAI_MODEL,
+  OpenAIResponsesIssueAnalyzer,
+  createOpenAIResponsesIssueAnalyzer,
+  extractFunctionCallsForTest,
+  type CreateOpenAIResponsesIssueAnalyzerOptions,
+  type OpenAIResponseCreateInput,
+  type OpenAIResponsesClient,
+  type OpenAIResponsesIssueAnalyzerOptions,
+} from "./analysis/analyzer.js";
+export {
   createDuplicateCandidateMap,
   findDuplicateCandidates,
   type DuplicateCandidate,

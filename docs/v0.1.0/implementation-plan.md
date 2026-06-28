@@ -628,7 +628,38 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Verified the Responses API/tool-use direction against the official OpenAI Responses API
+  reference and kept `DEFAULT_OPENAI_MODEL` at `gpt-5.5`.
+- Added `src/analysis/analyzer.ts` with `OpenAIResponsesIssueAnalyzer`,
+  `createOpenAIResponsesIssueAnalyzer`, `DEFAULT_OPENAI_MODEL`, fake-client-friendly
+  OpenAI response client types, model resolution, OpenAI request construction, tool-call
+  normalization, `tool-call-contract` validation, safe fallback warnings, and
+  `analysis.auth-missing`/`analysis.model-failed` mapping.
+- Added `src/analysis/prompt.ts` to build per-issue analysis prompts from repository
+  labels, issue context, duplicate candidates, and security precheck output.
+- Added `src/analysis/trace-capture.ts` to explicitly write raw and normalized captures
+  under `--capture-dir`-compatible `raw` and `regression` folders.
+- Wired `reviewRepository` to compute duplicate candidates and security precheck data for
+  each issue and to use the OpenAI analyzer by default when no analyzer is injected.
+- Preserved credential-free tests by keeping analyzer injection in review tests and using
+  fake OpenAI clients in analyzer tests.
+- Updated offline review CLI tests so default real execution without `OPENAI_API_KEY`
+  returns `analysis.auth-missing`, while injected review execution remains credential-free.
+- Added OpenAI analyzer tests for request shape, tool count, recommendation composition,
+  invalid output fallback warnings, request failure mapping, default model constant, and
+  capture writes.
+- Added trace capture tests for raw and normalized capture file output.
+- `npm test -- tests/openai-analyzer.test.ts tests/trace-capture.test.ts tests/review-offline.test.ts`
+  passed: 14 tests across 3 test files.
+- `npm run typecheck` passed.
+- `npm run lint` passed.
+- `npm test` passed: 80 tests across 19 test files.
+- `npm run build` passed.
+- `./node_modules/.bin/tool-call-contract validate --help` passed.
+- `./node_modules/.bin/tool-call-contract check` passed with no findings.
+- Built CLI fixture-mode smoke without `OPENAI_API_KEY` returned `analysis.auth-missing`
+  with the expected authentication guidance.
 
 ## Phase 8: Contract Regression Fixtures
 
