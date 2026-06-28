@@ -1,6 +1,6 @@
 {
   "name": "github-triage",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local, read-only GitHub issue triage reports for open-source maintainers.",
   "license": "MIT",
   "repository": {

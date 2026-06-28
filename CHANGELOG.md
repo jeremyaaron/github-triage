@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+- Planned project-local workflow with implicit repository detection, terminal-first
+  output, optional report artifacts, and lightweight project configuration.
+
 ## 0.1.0
 
 - Initial read-only GitHub issue triage report MVP.
