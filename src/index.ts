@@ -70,6 +70,30 @@ export {
   type SourceIssue,
   type SourceLabel,
 } from "./core/schemas.js";
+export {
+  reviewRepository,
+  reviewRepositoryFromCli,
+  type AnalyzeIssueInput,
+  type IssueAnalyzer,
+  type ReviewOptions,
+  type ReviewResult,
+} from "./core/review.js";
+export { createReviewSummary } from "./core/summary.js";
+export { readIssueSourceFile } from "./fixtures/issue-source.js";
+export { resolveGitHubToken, type ExecFile, type ResolveGitHubTokenOptions } from "./github/auth.js";
+export { createGitHubClient } from "./github/client.js";
+export { loadGitHubIssueSource, type LoadGitHubIssueSourceOptions } from "./github/issues.js";
+export {
+  type GitHubClient,
+  type GitHubCommentItem,
+  type GitHubIssueItem,
+  type GitHubIssueLabel,
+  type GitHubIssueSource,
+  type GitHubLabelItem,
+  type ListIssueCommentsInput,
+  type ListOpenIssuesInput,
+  type RepoInput,
+} from "./github/types.js";
 export { renderJsonReport } from "./reports/json.js";
 export { renderMarkdownReport } from "./reports/markdown.js";
 export {

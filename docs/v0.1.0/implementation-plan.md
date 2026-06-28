@@ -390,7 +390,31 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Added `src/fixtures/issue-source.ts` to read and validate issue-source fixture JSON
+  using the shared Phase 1 schemas.
+- Added `src/core/summary.ts` to derive review summary counts from report issues.
+- Added `src/core/review.ts` with offline review orchestration, injectable analyzer
+  support, conservative fallback analyzer, report model construction, report file writes,
+  and terminal summary output.
+- Wired `src/cli/run.ts` to the real `reviewRepositoryFromCli` path.
+- Kept live GitHub source out of scope for this phase; review without `--issues-file`
+  returns a clear `github.api-failed` operational error telling the user to use
+  `--issues-file`.
+- Added fixture-input tests for valid fixtures, invalid JSON, and invalid fixture shapes.
+- Added offline review tests for injected analyzer output, JSON terminal summaries,
+  report write failures, real CLI fixture-mode execution, and the pre-Phase-5 GitHub
+  source error.
+- Updated CLI run tests for the new Phase 4 review behavior.
+- `npm test -- tests/fixture-input.test.ts tests/review-offline.test.ts tests/cli-run.test.ts`
+  passed: 15 tests across 3 test files.
+- `npm run typecheck` passed.
+- `npm run lint` passed.
+- `npm run build` passed.
+- `npm test` passed: 51 tests across 10 test files.
+- A built CLI smoke run with `node dist/cli/index.js review jeremyaaron/pkg-guard --since
+  30d --issues-file <fixture> --output-dir <tmp>/reports --report-id smoke` wrote both
+  Markdown and JSON reports.
 
 ## Phase 5: GitHub Source Integration
 
@@ -443,7 +467,37 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Added `src/github/auth.ts` with GitHub token resolution from `GITHUB_TOKEN`, then
+  `gh auth token`, and `github.auth-missing` when neither is available.
+- Added `src/github/client.ts` with an Octokit-backed read-only GitHub client and an
+  injectable Octokit-like adapter for tests.
+- Added `src/github/types.ts` with raw GitHub client and normalized issue-source types.
+- Added `src/github/issues.ts` to fetch open issues, labels, and latest bounded comments;
+  filter pull requests; normalize GitHub API responses to `SourceIssue`/`SourceLabel`;
+  skip comment requests when `--comments 0`; and map common GitHub API failures.
+- Mapped GitHub auth failures, missing repos, generic API failures, HTTP 429 rate limits,
+  and GitHub's common HTTP 403 rate-limit responses.
+- Wired `reviewRepository` to use GitHub source when `--issues-file` is absent, while
+  preserving fixture mode when `--issues-file` is present.
+- Added GitHub auth tests for environment token, `gh auth token`, and missing auth.
+- Added Octokit adapter tests proving issue and label collection use pagination and
+  comments use the REST comments endpoint.
+- Added GitHub issue-source tests for label normalization, pull request exclusion, comment
+  collection, comment skipping, and error mapping.
+- Added review integration coverage for the GitHub source path using an injected fake
+  GitHub client.
+- Updated prior CLI/offline tests to expect `github.auth-missing` when GitHub source is
+  requested without credentials.
+- `npm test -- tests/github-auth.test.ts tests/github-issues.test.ts tests/github-client.test.ts tests/review-github.test.ts`
+  passed: 10 tests across 4 test files.
+- `npm run typecheck` passed.
+- `npm run lint` passed.
+- `npm test` passed: 61 tests across 14 test files.
+- `npm run build` passed.
+- Built CLI fixture-mode smoke still wrote both Markdown and JSON reports.
+- Built CLI GitHub-mode smoke without `GITHUB_TOKEN` returned `github.auth-missing` with
+  the expected authentication guidance.
 
 ## Phase 6: Local Analysis Primitives And Tool Contracts
 

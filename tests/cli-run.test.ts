@@ -100,10 +100,11 @@ describe("runCli", () => {
     expect(result.stderr).toBe("error github.api-failed\n  GitHub failed.\n");
   });
 
-  it("uses a placeholder operational error until review execution is implemented", async () => {
+  it("returns an auth error for GitHub source without credentials", async () => {
     const result = await runCli(["review", "owner/repo", "--since", "30d"], { now });
 
     expect(result.exitCode).toBe(1);
-    expect(result.stderr).toContain("error analysis.model-failed");
+    expect(result.stderr).toContain("error github.auth-missing");
+    expect(result.stderr).toContain("Set GITHUB_TOKEN or run `gh auth login`");
   });
 });

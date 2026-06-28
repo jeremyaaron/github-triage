@@ -1,4 +1,5 @@
-import { GithubTriageError, isGithubTriageError } from "../core/errors.js";
+import { isGithubTriageError } from "../core/errors.js";
+import { reviewRepositoryFromCli } from "../core/review.js";
 import { version } from "../version.js";
 import { renderHelp } from "./help.js";
 import { parseCliArgs, type ReviewCliOptions } from "./options.js";
@@ -42,7 +43,7 @@ export async function runCli(
           stderr: "",
         };
       case "review": {
-        const reviewRepository = dependencies.reviewRepository ?? notImplementedReviewRepository;
+        const reviewRepository = dependencies.reviewRepository ?? reviewRepositoryFromCli;
         const result = await reviewRepository(parsed.options);
         return {
           exitCode: 0,
@@ -54,14 +55,6 @@ export async function runCli(
   } catch (error) {
     return renderError(error);
   }
-}
-
-async function notImplementedReviewRepository(): Promise<ReviewRepositoryResult> {
-  throw new GithubTriageError({
-    code: "analysis.model-failed",
-    message: "The review command is not implemented yet.",
-    exitCode: 1,
-  });
 }
 
 function renderError(error: unknown): CliResult {
