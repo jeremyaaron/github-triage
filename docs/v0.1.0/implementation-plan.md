@@ -155,7 +155,24 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Added `src/core/schemas.ts` with Zod schemas and exported TypeScript types for repo
+  slugs, duration windows, source issues, fixture documents, recommendations, review
+  summaries, report warnings, report issues, and full review reports.
+- Added `src/core/errors.ts` with `GithubTriageError`, stable error codes, exit codes,
+  usage-error helper, and typed-error detection.
+- Added `src/core/duration.ts` with day-based duration parsing for values such as `7d`,
+  `30d`, and `90d`.
+- Added `parseRepoSlug` and `parseReportId` validation helpers.
+- Exported the Phase 1 core helpers, schemas, and types from `src/index.ts`.
+- Added unit tests for schemas, repo parsing, duration parsing, report-id validation, and
+  typed errors.
+- `npm test -- tests/core-schemas.test.ts tests/duration.test.ts tests/errors.test.ts`
+  passed: 14 tests across 3 test files.
+- `npm run typecheck` passed.
+- `npm test` passed: 15 tests across 4 test files.
+- `npm run build` passed.
+- `npm run lint` passed.
 
 ## Phase 2: Report Paths And Renderers
 
