@@ -57,5 +57,17 @@ export {
   type SourceIssue,
   type SourceLabel,
 } from "./core/schemas.js";
+export { renderJsonReport } from "./reports/json.js";
+export { renderMarkdownReport } from "./reports/markdown.js";
+export {
+  createDefaultReportId,
+  defaultReportOutputDir,
+  planReportPaths,
+  type ReportFilePath,
+  type ReportFormat,
+  type ReportPathPlan,
+  type ReportPathPlanOptions,
+} from "./reports/paths.js";
+export { renderTerminalJsonSummary, renderTerminalSummary } from "./reports/terminal.js";
 
 export const version = "0.1.0";

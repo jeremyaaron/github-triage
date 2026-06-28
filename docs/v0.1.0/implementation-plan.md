@@ -230,7 +230,23 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Added `src/reports/paths.ts` with default output directory, UTC report-id generation,
+  explicit report-id validation, and Markdown/JSON/all path planning.
+- Added `src/reports/json.ts` with deterministic two-space JSON rendering and trailing
+  newline.
+- Added `src/reports/markdown.ts` with report sections for summary, security-sensitive
+  issues, maintainer responses, duplicate/related issues, per-issue recommendations, and
+  warnings.
+- Added `src/reports/terminal.ts` with human and JSON terminal summaries.
+- Exported the Phase 2 report helpers and types from `src/index.ts`.
+- Added report path and rendering unit tests.
+- `npm test -- tests/report-paths.test.ts tests/report-rendering.test.ts` passed: 11
+  tests across 2 test files.
+- `npm run typecheck` passed.
+- `npm test` passed: 26 tests across 6 test files.
+- `npm run build` passed.
+- `npm run lint` passed.
 
 ## Phase 3: CLI Parsing And Help
 
