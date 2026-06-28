@@ -1,4 +1,17 @@
 export { parseDurationWindow } from "./core/duration.js";
+export { renderHelp } from "./cli/help.js";
+export {
+  parseCliArgs,
+  type ParsedCliCommand,
+  type ReviewCliOptions,
+} from "./cli/options.js";
+export {
+  runCli,
+  type CliResult,
+  type ReviewRepository,
+  type ReviewRepositoryResult,
+  type RunCliDependencies,
+} from "./cli/run.js";
 export {
   GithubTriageError,
   createUsageError,
@@ -69,5 +82,4 @@ export {
   type ReportPathPlanOptions,
 } from "./reports/paths.js";
 export { renderTerminalJsonSummary, renderTerminalSummary } from "./reports/terminal.js";
-
-export const version = "0.1.0";
+export { version } from "./version.js";

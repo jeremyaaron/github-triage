@@ -311,7 +311,30 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed on 2026-06-28.
+- Added `src/cli/options.ts` with parsing and validation for `review <owner>/<repo>`,
+  `--since`, `--output-dir`, `--format`, `--issues-file`, `--comments`, `--report-id`,
+  `--capture-dir`, `--model`, `--json`, `--help`, and `--version`.
+- Added `src/cli/help.ts` with user-facing command help.
+- Added `src/cli/run.ts` with injectable review execution, stdout/stderr/exit-code
+  results, usage-error mapping to exit code `2`, and operational-error mapping to exit
+  code `1`.
+- Updated `src/cli/index.ts` to adapt `runCli` to the Node process.
+- Added `src/version.ts` to keep package version access out of CLI/index circular imports.
+- Exported Phase 3 CLI helpers and types from `src/index.ts`.
+- Added CLI option and run tests covering help, version, valid review parsing, invalid
+  command, invalid repo slug, invalid duration, invalid format, invalid comments count,
+  invalid report id, `--json` propagation, and review error mapping.
+- `npm test -- tests/cli-options.test.ts tests/cli-run.test.ts` passed: 17 tests across
+  2 test files.
+- `npm run typecheck` passed.
+- `npm run build` passed.
+- `npm run lint` passed.
+- `npm test` passed: 43 tests across 8 test files.
+- `node dist/cli/index.js --version` printed `0.1.0`.
+- `node dist/cli/index.js --help` printed the review command help.
+- `node dist/cli/index.js review owner/repo --since 30d` returned exit code `1` with the
+  expected placeholder operational error until Phase 4 implements review execution.
 
 ## Phase 4: Fixture Input And Offline Review Orchestration
 
