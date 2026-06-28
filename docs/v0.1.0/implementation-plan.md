@@ -710,7 +710,28 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed.
+- Added issue-source fixtures covering clear bug, vague bug, feature request,
+  duplicate report, support request, security-looking report, dependency update,
+  and missing reproduction scenarios.
+- Added redacted normalized regression captures for the six internal triage tool
+  calls used by each scenario.
+- Refined committed-capture redaction paths in `tool-call-contract.config.ts` so
+  report reply bodies are preserved while author/comment source content remains
+  covered.
+- Added `tests/regression-fixtures.test.ts` to validate fixture shapes, validate
+  committed captures against `triageToolContracts`, assert no obvious sensitive
+  fixture data is committed, and exercise report behavior for every fixture
+  category.
+- Verification passed:
+  - `npm test -- tests/regression-fixtures.test.ts`
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm test`
+  - `npm run build`
+  - `./node_modules/.bin/tool-call-contract validate --suite regression`
+  - `./node_modules/.bin/tool-call-contract redact --check --suite regression`
+  - `./node_modules/.bin/tool-call-contract check`
 
 ## Phase 9: README, Examples, And Manual Smoke
 

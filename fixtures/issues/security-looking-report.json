@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "security"
+    }
+  ],
+  "issues": [
+    {
+      "number": 106,
+      "title": "Possible token exposure in debug output",
+      "body": "A debug log appears to include a token value. I can provide details privately.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-07T00:00:00.000Z",
+      "updatedAt": "2026-01-07T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/106",
+      "comments": []
+    }
+  ]
+}

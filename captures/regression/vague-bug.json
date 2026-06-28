@@ -1,0 +1,60 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "unclear",
+      "confidence": "medium",
+      "rationale": "The issue reports failure but does not include enough detail to classify the failure mode."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "needs reproduction",
+          "confidence": "high",
+          "rationale": "The report needs reproduction steps before maintainer action.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": [
+        {
+          "kind": "reproduction",
+          "question": "Can you share the exact command, package version, and reproduction steps?"
+        },
+        {
+          "kind": "logs",
+          "question": "Can you include the full error output?"
+        }
+      ]
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the report. Can you share the exact command, package version, reproduction steps, and full error output?",
+      "rationale": "The current report is too vague for diagnosis."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The report does not include security-sensitive indicators.",
+      "publicReplyAllowed": true
+    }
+  }
+]

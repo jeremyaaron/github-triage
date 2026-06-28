@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "bug"
+    },
+    {
+      "name": "duplicate"
+    }
+  ],
+  "issues": [
+    {
+      "number": 104,
+      "title": "Types fail through package exports",
+      "body": "This looks like the same declaration resolution failure reported earlier.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-05T00:00:00.000Z",
+      "updatedAt": "2026-01-05T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/104",
+      "comments": []
+    },
+    {
+      "number": 41,
+      "title": "Declaration files are missing from exports",
+      "body": "TypeScript consumers cannot resolve declaration files through the exports map.",
+      "author": "other-author",
+      "state": "open",
+      "labels": [
+        {
+          "name": "bug"
+        }
+      ],
+      "createdAt": "2025-12-01T00:00:00.000Z",
+      "updatedAt": "2025-12-02T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/41",
+      "comments": []
+    }
+  ]
+}

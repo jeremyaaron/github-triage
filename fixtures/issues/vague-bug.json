@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "bug"
+    },
+    {
+      "name": "needs reproduction"
+    }
+  ],
+  "issues": [
+    {
+      "number": 102,
+      "title": "It does not work",
+      "body": "The command fails for my project.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-03T00:00:00.000Z",
+      "updatedAt": "2026-01-03T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/102",
+      "comments": []
+    }
+  ]
+}

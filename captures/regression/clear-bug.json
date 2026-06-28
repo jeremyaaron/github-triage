@@ -1,0 +1,56 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "bug",
+      "confidence": "high",
+      "rationale": "The issue describes a concrete TypeScript declaration resolution failure."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "bug",
+          "confidence": "high",
+          "rationale": "The reported behavior appears broken for TypeScript consumers.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": [
+        {
+          "kind": "minimal-reproduction",
+          "question": "Can you share a minimal package that reproduces the declaration resolution failure?"
+        }
+      ]
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the report. Can you share a minimal package that reproduces the declaration resolution failure?",
+      "rationale": "The maintainer needs a minimal reproduction before diagnosing the export map behavior."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The issue describes package type resolution and does not include security-sensitive material.",
+      "publicReplyAllowed": true
+    }
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "bug"
+    },
+    {
+      "name": "needs reproduction"
+    }
+  ],
+  "issues": [
+    {
+      "number": 108,
+      "title": "Consumer smoke check fails in CI",
+      "body": "The smoke check fails in CI, but I cannot share the repo. The command exits with an error.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-09T00:00:00.000Z",
+      "updatedAt": "2026-01-09T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/108",
+      "comments": []
+    }
+  ]
+}

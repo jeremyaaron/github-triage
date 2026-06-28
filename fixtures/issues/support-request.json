@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "question"
+    }
+  ],
+  "issues": [
+    {
+      "number": 105,
+      "title": "How should I configure this in a pnpm workspace?",
+      "body": "I am not sure which command to run for a workspace package.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-06T00:00:00.000Z",
+      "updatedAt": "2026-01-06T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/105",
+      "comments": []
+    }
+  ]
+}

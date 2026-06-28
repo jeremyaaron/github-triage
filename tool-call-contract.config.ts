@@ -13,7 +13,6 @@ export default defineConfig({
       "input.*.content",
       "output.*.content",
       "messages.*.content",
-      "body",
       "comments.*.body",
       "author",
     ],

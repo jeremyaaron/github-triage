@@ -1,0 +1,51 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "support",
+      "confidence": "high",
+      "rationale": "The issue asks how to use the tool in a pnpm workspace."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "question",
+          "confidence": "high",
+          "rationale": "The issue is a usage question.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": []
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "For a pnpm workspace, run the command from the workspace root and target the package you want to check. If that does not work, please share the workspace layout.",
+      "rationale": "The user needs usage guidance rather than bug triage."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The support question does not include security-sensitive material.",
+      "publicReplyAllowed": true
+    }
+  }
+]
