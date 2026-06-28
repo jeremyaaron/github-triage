@@ -155,7 +155,28 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed.
+- Added `src/repository/detect.ts` with local git repository detection using
+  `git rev-parse --show-toplevel` and `git remote -v`.
+- Added pure GitHub remote URL parsing for HTTPS, HTTP, SSH URL, and SCP-like SSH forms.
+- Implemented deterministic remote selection:
+  - parseable `origin` wins;
+  - otherwise a single parseable GitHub remote wins;
+  - otherwise detection fails with an actionable missing or ambiguous repo error.
+- Added repository detection error codes:
+  - `repo.detect-missing`;
+  - `repo.detect-ambiguous`;
+  - `repo.git-failed`.
+- Exported repository detection helpers and types from `src/index.ts`.
+- Added `tests/repository-detect.test.ts` covering remote parsing, origin selection,
+  single-remote fallback, ambiguity, missing git repositories, no-GitHub-remote cases,
+  unexpected git failures, and injected command `cwd` usage.
+- Verification passed:
+  - `npm test -- tests/repository-detect.test.ts`
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm test`
+  - `npm run build`
 
 ## Phase 2: Project Configuration
 

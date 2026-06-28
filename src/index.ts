@@ -139,6 +139,15 @@ export {
 export { renderJsonReport } from "./reports/json.js";
 export { renderMarkdownReport } from "./reports/markdown.js";
 export {
+  detectGitHubRepository,
+  parseGitHubRemoteUrl,
+  type DetectRepositoryOptions,
+  type DetectedGitHubRepository,
+  type GitRemote,
+  type RepositoryContext,
+  type RepositoryExecFile,
+} from "./repository/detect.js";
+export {
   createDefaultReportId,
   defaultReportOutputDir,
   planReportPaths,
