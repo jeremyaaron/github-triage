@@ -1,0 +1,51 @@
+{
+  "name": "github-triage",
+  "version": "0.1.0",
+  "description": "Local, read-only GitHub issue triage reports for open-source maintainers.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeremyaaron/github-triage.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jeremyaaron/github-triage/issues"
+  },
+  "homepage": "https://github.com/jeremyaaron/github-triage#readme",
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "github-triage": "./dist/cli/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "docs",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/mark-bin-executable.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "verify:release": "npm run lint && npm run typecheck && npm test && npm run build && pkg-guard check && npm pack --dry-run --ignore-scripts"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "packageManager": "npm@10.8.2",
+  "dependencies": {
+    "@octokit/rest": "^22.0.0",
+    "openai": "^6.0.0",
+    "tool-call-contract": "^0.3.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^9.0.0",
+    "pkg-guard": "^0.4.0",
+    "typescript": "^5.5.0",
+    "typescript-eslint": "^8.0.0",
+    "vitest": "^4.0.0"
+  }
+}

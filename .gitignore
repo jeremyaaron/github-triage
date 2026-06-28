@@ -1,0 +1,8 @@
+node_modules/
+dist/
+coverage/
+.github-triage/
+captures/raw/
+.env
+.env.*
+*.tgz

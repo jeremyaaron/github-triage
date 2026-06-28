@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "dependencies"
+    }
+  ],
+  "issues": [
+    {
+      "number": 107,
+      "title": "Update TypeScript peer dependency range",
+      "body": "The package should support the latest TypeScript minor release.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-08T00:00:00.000Z",
+      "updatedAt": "2026-01-08T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/107",
+      "comments": []
+    }
+  ]
+}

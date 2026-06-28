@@ -1,0 +1,51 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "feature",
+      "confidence": "high",
+      "rationale": "The issue asks for a new SARIF output capability."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "enhancement",
+          "confidence": "high",
+          "rationale": "The issue requests new functionality.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": []
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the suggestion. This sounds like a feature request for SARIF output, so I will treat it as an enhancement candidate.",
+      "rationale": "The maintainer can acknowledge the request without promising implementation."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The feature request does not include security-sensitive material.",
+      "publicReplyAllowed": true
+    }
+  }
+]

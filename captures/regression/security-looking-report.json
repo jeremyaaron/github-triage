@@ -1,0 +1,51 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "security",
+      "confidence": "high",
+      "rationale": "The issue mentions possible token exposure and private disclosure."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "security",
+          "confidence": "high",
+          "rationale": "The issue appears security-sensitive.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": []
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the report. Please avoid posting token values or exploit details publicly. I will review this carefully before suggesting a public follow-up.",
+      "rationale": "The response should avoid amplifying sensitive details."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": true,
+      "confidence": "high",
+      "rationale": "The issue mentions possible token exposure and private disclosure.",
+      "publicReplyAllowed": false
+    }
+  }
+]

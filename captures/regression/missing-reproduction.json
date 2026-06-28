@@ -1,0 +1,66 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "bug",
+      "confidence": "medium",
+      "rationale": "The issue reports a CI smoke check failure but lacks enough reproduction detail."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "bug",
+          "confidence": "medium",
+          "rationale": "The issue reports a failing command.",
+          "exists": true
+        },
+        {
+          "name": "needs reproduction",
+          "confidence": "high",
+          "rationale": "The report lacks a minimal reproduction or enough environment detail.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": [
+        {
+          "kind": "minimal-reproduction",
+          "question": "Can you share a minimal public reproduction or a reduced fixture that triggers the smoke check failure?"
+        },
+        {
+          "kind": "logs",
+          "question": "Can you include the exact CI error output?"
+        }
+      ]
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the report. Can you share a minimal public reproduction or reduced fixture plus the exact CI error output?",
+      "rationale": "The maintainer needs reproducible details before investigating the CI failure."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The issue does not include security-sensitive indicators.",
+      "publicReplyAllowed": true
+    }
+  }
+]

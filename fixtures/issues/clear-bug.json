@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "repository": {
+    "owner": "jeremyaaron",
+    "name": "pkg-guard"
+  },
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something is not working"
+    },
+    {
+      "name": "needs reproduction",
+      "description": "More reproduction detail is needed"
+    }
+  ],
+  "issues": [
+    {
+      "number": 101,
+      "title": "Exports map omits generated type declarations",
+      "body": "After upgrading, TypeScript cannot resolve declarations from the package exports map. Runtime imports still work.",
+      "author": "fixture-author",
+      "state": "open",
+      "labels": [],
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "updatedAt": "2026-01-02T00:00:00.000Z",
+      "commentCount": 0,
+      "url": "https://github.com/jeremyaaron/pkg-guard/issues/101",
+      "comments": []
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "bug",
+      "confidence": "medium",
+      "rationale": "The report describes a declaration resolution failure that appears similar to an existing issue."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "bug",
+          "confidence": "medium",
+          "rationale": "The issue describes broken behavior.",
+          "exists": true
+        },
+        {
+          "name": "duplicate",
+          "confidence": "medium",
+          "rationale": "The issue appears to overlap with an existing declaration exports issue.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": [
+        {
+          "issueNumber": 41,
+          "title": "Declaration files are missing from exports",
+          "url": "https://github.com/jeremyaaron/pkg-guard/issues/41",
+          "relationship": "likely-duplicate",
+          "confidence": "medium",
+          "rationale": "Both issues describe TypeScript declaration files failing through the package exports map."
+        }
+      ]
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": []
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the report. This looks related to #41, so I would track the declaration exports discussion there unless you are seeing a distinct failure.",
+      "rationale": "The issue likely overlaps with an existing report."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The report does not include security-sensitive indicators.",
+      "publicReplyAllowed": true
+    }
+  }
+]

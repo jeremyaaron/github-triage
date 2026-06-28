@@ -1,0 +1,51 @@
+[
+  {
+    "name": "classify_issue",
+    "arguments": {
+      "classification": "dependency",
+      "confidence": "high",
+      "rationale": "The issue asks to update a TypeScript dependency compatibility range."
+    }
+  },
+  {
+    "name": "suggest_labels",
+    "arguments": {
+      "labels": [
+        {
+          "name": "dependencies",
+          "confidence": "high",
+          "rationale": "The issue concerns dependency version support.",
+          "exists": true
+        }
+      ]
+    }
+  },
+  {
+    "name": "find_duplicate",
+    "arguments": {
+      "relatedIssues": []
+    }
+  },
+  {
+    "name": "request_reproduction",
+    "arguments": {
+      "missingInformation": []
+    }
+  },
+  {
+    "name": "draft_reply",
+    "arguments": {
+      "body": "Thanks for the heads up. I will treat this as a dependency compatibility request for the TypeScript peer range.",
+      "rationale": "The maintainer can acknowledge the dependency update request without promising timing."
+    }
+  },
+  {
+    "name": "escalate_security",
+    "arguments": {
+      "sensitive": false,
+      "confidence": "high",
+      "rationale": "The dependency request does not include security-sensitive material.",
+      "publicReplyAllowed": true
+    }
+  }
+]
