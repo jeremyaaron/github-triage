@@ -12,6 +12,7 @@
   },
   "homepage": "https://github.com/jeremyaaron/github-triage#readme",
   "type": "module",
+  "types": "./dist/index.d.ts",
   "bin": {
     "github-triage": "./dist/cli/index.js"
   },

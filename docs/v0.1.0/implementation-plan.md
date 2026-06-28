@@ -782,19 +782,53 @@ npm run verify:release
 
 Status:
 
-- Not started.
+- Completed with credential-dependent live smoke deferred.
+- Replaced the README stub with v0.1.0 user documentation covering positioning,
+  install/build steps, environment variables, read-only behavior, first-run commands,
+  fixture mode, report paths, report contents, and release checks.
+- Added `docs/v0.1.0/contributor-notes.md` for capture workflow, raw-capture hygiene,
+  redaction, contract regression tests, and manual smoke commands.
+- Added `LICENSE`, `CHANGELOG.md`, and package `types` metadata so release packaging is
+  clean.
+- Updated `.gitignore` to keep `captures/raw/` and local `.env` files out of git.
+- Confirmed user-facing README describes the project as a maintainer triage assistant,
+  not a contract-testing harness.
+- Manual smoke attempts:
+  - `node dist/cli/index.js --help` passed.
+  - `node dist/cli/index.js review jeremyaaron/tool-call-contract --since 30d --report-id smoke-tool-call-contract`
+    stopped at `github.auth-missing` because this shell has no `GITHUB_TOKEN`, no `gh`
+    auth, and no OpenAI credentials.
+  - `node dist/cli/index.js review jeremyaaron/pkg-guard --since 30d --report-id smoke-pkg-guard`
+    stopped at `github.auth-missing` for the same reason.
+  - `node dist/cli/index.js review jeremyaaron/pkg-guard --since 30d --issues-file fixtures/issues/clear-bug.json --report-id clear-bug`
+    stopped at `analysis.auth-missing`, confirming fixture mode bypasses GitHub but still
+    requires `OPENAI_API_KEY`.
+- Verification passed:
+  - `npm run build`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm test`
+  - `./node_modules/.bin/pkg-guard check`
+  - `npm pack --dry-run --ignore-scripts`
+  - `./node_modules/.bin/tool-call-contract validate --suite regression`
+  - `./node_modules/.bin/tool-call-contract redact --check --suite regression`
+  - `./node_modules/.bin/tool-call-contract check`
+  - `npm run verify:release`
 
 ## Release Readiness Checklist
 
-- `npm run lint` passes.
-- `npm run typecheck` passes.
-- `npm test` passes.
-- `npm run build` passes.
-- `pkg-guard check` passes.
-- `npm pack --dry-run --ignore-scripts` passes.
-- Fixture-mode review writes Markdown and JSON reports.
-- Live GitHub/OpenAI smoke tests have been run manually.
-- No default command mutates GitHub state.
-- No default test requires live credentials.
-- Captures committed to the repo are redacted.
-- User-facing docs describe a maintainer assistant, not a dogfood harness.
+- Done: `npm run lint` passes.
+- Done: `npm run typecheck` passes.
+- Done: `npm test` passes.
+- Done: `npm run build` passes.
+- Done: `pkg-guard check` passes through `./node_modules/.bin/pkg-guard check` and
+  `npm run verify:release`.
+- Done: `npm pack --dry-run --ignore-scripts` passes.
+- Deferred: fixture-mode review writes Markdown and JSON reports once `OPENAI_API_KEY`
+  is available; the no-key smoke stops at the expected `analysis.auth-missing` error.
+- Deferred: live GitHub/OpenAI smoke tests require `GITHUB_TOKEN` or `gh auth login` and
+  `OPENAI_API_KEY`.
+- Done: no default command mutates GitHub state.
+- Done: no default test requires live credentials.
+- Done: captures committed to the repo are redacted.
+- Done: user-facing docs describe a maintainer assistant, not a dogfood harness.
