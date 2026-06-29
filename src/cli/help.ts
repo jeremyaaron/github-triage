@@ -6,14 +6,15 @@ export function renderHelp(): string {
 Local, read-only GitHub issue triage reports.
 
 Usage:
-  github-triage review <owner>/<repo> --since <duration> [options]
+  github-triage review [owner/repo] --since <duration> [options]
   github-triage --help
   github-triage --version
 
 Options:
   --since <duration>        Review open issues created or updated since duration ago.
+  --report <format>         none, markdown, json, or all. Default: all.
   --output-dir <path>       Report output directory. Default: .github-triage/reports.
-  --format <format>         markdown, json, or all. Default: all.
+  --format <format>         Deprecated alias for --report. Supports markdown, json, or all.
   --issues-file <path>      Read issue-source JSON from disk instead of GitHub.
   --comments <count>        Latest comments per issue to fetch. Default: 5. Range: 0..20.
   --report-id <id>          Deterministic report id used as output basename suffix.

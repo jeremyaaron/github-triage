@@ -14,7 +14,7 @@ import { loadGitHubIssueSource } from "../github/issues.js";
 import type { GitHubClient, GitHubIssueSource } from "../github/types.js";
 import { renderJsonReport } from "../reports/json.js";
 import { renderMarkdownReport } from "../reports/markdown.js";
-import { planReportPaths, type ReportFormat } from "../reports/paths.js";
+import { planReportPaths, type ReportArtifactFormat, type ReportFormat } from "../reports/paths.js";
 import { renderTerminalJsonSummary, renderTerminalSummary } from "../reports/terminal.js";
 import { GithubTriageError } from "./errors.js";
 import {
@@ -45,6 +45,7 @@ export interface ReviewOptions {
   repo: RepoSlug;
   since: DurationWindow;
   outputDir: string;
+  report?: ReportArtifactFormat;
   format: ReportFormat;
   issuesFile?: string;
   comments: number;
@@ -125,7 +126,7 @@ export async function reviewRepository(options: ReviewOptions): Promise<ReviewRe
   const paths = planReportPaths({
     repo: options.repo,
     outputDir: options.outputDir,
-    format: options.format,
+    format: options.report ?? options.format,
     now: new Date(generatedAt),
     ...(options.reportId ? { reportId: options.reportId } : {}),
   });

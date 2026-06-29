@@ -5,10 +5,11 @@ import { parseReportId, repoSlugSchema, type RepoSlug } from "../core/schemas.js
 export const defaultReportOutputDir = ".github-triage/reports";
 
 export type ReportFormat = "markdown" | "json" | "all";
+export type ReportArtifactFormat = "none" | ReportFormat;
 
 export interface ReportPathPlanOptions {
   repo: RepoSlug;
-  format: ReportFormat;
+  format: ReportArtifactFormat;
   outputDir?: string;
   reportId?: string;
   now?: Date;
@@ -63,9 +64,11 @@ export function planReportPaths(options: ReportPathPlanOptions): ReportPathPlan 
 function createReportFiles(
   outputDir: string,
   baseName: string,
-  format: ReportFormat,
+  format: ReportArtifactFormat,
 ): ReportFilePath[] {
   switch (format) {
+    case "none":
+      return [];
     case "markdown":
       return [{ format: "markdown", path: path.join(outputDir, `${baseName}.md`) }];
     case "json":

@@ -1,4 +1,3 @@
-import { parseDurationWindow } from "../core/duration.js";
 import { createUsageError } from "../core/errors.js";
 import {
   parseRepoSlug,
@@ -6,15 +5,30 @@ import {
   type DurationWindow,
   type RepoSlug,
 } from "../core/schemas.js";
-import { defaultReportOutputDir, type ReportFormat } from "../reports/paths.js";
+import type { ReportArtifactFormat, ReportFormat } from "../reports/paths.js";
 
 export interface ReviewCliOptions {
   repo: RepoSlug;
   since: DurationWindow;
   outputDir: string;
+  report: ReportArtifactFormat;
   format: ReportFormat;
   issuesFile?: string;
   comments: number;
+  reportId?: string;
+  captureDir?: string;
+  model?: string;
+  jsonSummary: boolean;
+  projectRoot?: string;
+}
+
+export interface ParsedReviewArgs {
+  repo?: RepoSlug;
+  since?: string;
+  report?: ReportArtifactFormat;
+  outputDir?: string;
+  issuesFile?: string;
+  comments?: number;
   reportId?: string;
   captureDir?: string;
   model?: string;
@@ -30,10 +44,10 @@ export type ParsedCliCommand =
     }
   | {
       command: "review";
-      options: ReviewCliOptions;
+      args: ParsedReviewArgs;
     };
 
-export function parseCliArgs(args: readonly string[], now = new Date()): ParsedCliCommand {
+export function parseCliArgs(args: readonly string[]): ParsedCliCommand {
   if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
     return { command: "help" };
   }
@@ -42,43 +56,27 @@ export function parseCliArgs(args: readonly string[], now = new Date()): ParsedC
     return { command: "version" };
   }
 
-  const [command, repoInput, ...rest] = args;
+  const [command, possibleRepoInput, ...rest] = args;
 
   if (command !== "review") {
     throw createUsageError(
       "cli.invalid-command",
-      `Invalid command "${command ?? ""}". Use "github-triage review <owner>/<repo>".`,
+      `Invalid command "${command ?? ""}". Use "github-triage review [owner/repo]".`,
     );
   }
 
-  if (!repoInput) {
-    throw createUsageError(
-      "cli.invalid-repo",
-      'Missing repository. Use "github-triage review <owner>/<repo>".',
-    );
-  }
-
-  const repo = parseRepoSlug(repoInput);
-  const raw = parseReviewFlags(rest);
-
-  if (!raw.since) {
-    throw createUsageError(
-      "cli.invalid-duration",
-      'Missing --since value. Use a day-based duration such as "--since 30d".',
-    );
-  }
-
-  const since = parseDurationWindow(raw.since, now);
+  const { repo, flags } = splitRepoAndFlags(possibleRepoInput, rest);
+  const raw = parseReviewFlags(flags);
 
   return {
     command: "review",
-    options: {
-      repo,
-      since,
-      outputDir: raw.outputDir ?? defaultReportOutputDir,
-      format: raw.format ?? "all",
+    args: {
+      ...(repo ? { repo } : {}),
+      ...(raw.since ? { since: raw.since } : {}),
+      ...(raw.report ? { report: raw.report } : {}),
+      ...(raw.outputDir ? { outputDir: raw.outputDir } : {}),
       ...(raw.issuesFile ? { issuesFile: raw.issuesFile } : {}),
-      comments: raw.comments ?? 5,
+      ...(raw.comments !== undefined ? { comments: raw.comments } : {}),
       ...(raw.reportId ? { reportId: raw.reportId } : {}),
       ...(raw.captureDir ? { captureDir: raw.captureDir } : {}),
       ...(raw.model ? { model: raw.model } : {}),
@@ -90,13 +88,31 @@ export function parseCliArgs(args: readonly string[], now = new Date()): ParsedC
 interface RawReviewFlags {
   since?: string;
   outputDir?: string;
-  format?: ReportFormat;
+  report?: ReportArtifactFormat;
   issuesFile?: string;
   comments?: number;
   reportId?: string;
   captureDir?: string;
   model?: string;
   jsonSummary: boolean;
+}
+
+function splitRepoAndFlags(
+  possibleRepoInput: string | undefined,
+  rest: readonly string[],
+): { repo?: RepoSlug; flags: readonly string[] } {
+  if (!possibleRepoInput) {
+    return { flags: [] };
+  }
+
+  if (possibleRepoInput.startsWith("--")) {
+    return { flags: [possibleRepoInput, ...rest] };
+  }
+
+  return {
+    repo: parseRepoSlug(possibleRepoInput),
+    flags: rest,
+  };
 }
 
 function parseReviewFlags(args: readonly string[]): RawReviewFlags {
@@ -116,8 +132,12 @@ function parseReviewFlags(args: readonly string[]): RawReviewFlags {
         raw.outputDir = readOptionValue(args, index, "--output-dir");
         index += 1;
         break;
+      case "--report":
+        raw.report = parseReport(readOptionValue(args, index, "--report"));
+        index += 1;
+        break;
       case "--format":
-        raw.format = parseFormat(readOptionValue(args, index, "--format"));
+        raw.report = parseLegacyFormat(readOptionValue(args, index, "--format"));
         index += 1;
         break;
       case "--issues-file":
@@ -164,7 +184,18 @@ function readOptionValue(args: readonly string[], index: number, name: string): 
   return value;
 }
 
-function parseFormat(input: string): ReportFormat {
+function parseReport(input: string): ReportArtifactFormat {
+  if (input === "none" || input === "markdown" || input === "json" || input === "all") {
+    return input;
+  }
+
+  throw createUsageError(
+    "cli.invalid-format",
+    `Invalid --report value "${input}". Use none, markdown, json, or all.`,
+  );
+}
+
+function parseLegacyFormat(input: string): ReportFormat {
   if (input === "markdown" || input === "json" || input === "all") {
     return input;
   }

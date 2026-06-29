@@ -45,8 +45,13 @@ export { renderHelp } from "./cli/help.js";
 export {
   parseCliArgs,
   type ParsedCliCommand,
+  type ParsedReviewArgs,
   type ReviewCliOptions,
 } from "./cli/options.js";
+export {
+  resolveReviewCliOptions,
+  type ResolveReviewOptionsDependencies,
+} from "./cli/resolve-options.js";
 export {
   runCli,
   type CliResult,
@@ -158,6 +163,7 @@ export {
   createDefaultReportId,
   defaultReportOutputDir,
   planReportPaths,
+  type ReportArtifactFormat,
   type ReportFilePath,
   type ReportFormat,
   type ReportPathPlan,

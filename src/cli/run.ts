@@ -3,6 +3,10 @@ import { reviewRepositoryFromCli } from "../core/review.js";
 import { version } from "../version.js";
 import { renderHelp } from "./help.js";
 import { parseCliArgs, type ReviewCliOptions } from "./options.js";
+import {
+  resolveReviewCliOptions,
+  type ResolveReviewOptionsDependencies,
+} from "./resolve-options.js";
 
 export interface CliResult {
   exitCode: 0 | 1 | 2;
@@ -20,6 +24,8 @@ export type ReviewRepository = (options: ReviewCliOptions) => Promise<ReviewRepo
 export interface RunCliDependencies {
   reviewRepository?: ReviewRepository;
   now?: Date;
+  cwd?: string;
+  execFile?: ResolveReviewOptionsDependencies["execFile"];
 }
 
 export async function runCli(
@@ -27,7 +33,7 @@ export async function runCli(
   dependencies: RunCliDependencies = {},
 ): Promise<CliResult> {
   try {
-    const parsed = parseCliArgs(args, dependencies.now);
+    const parsed = parseCliArgs(args);
 
     switch (parsed.command) {
       case "help":
@@ -44,7 +50,12 @@ export async function runCli(
         };
       case "review": {
         const reviewRepository = dependencies.reviewRepository ?? reviewRepositoryFromCli;
-        const result = await reviewRepository(parsed.options);
+        const options = await resolveReviewCliOptions(parsed.args, {
+          ...(dependencies.now ? { now: dependencies.now } : {}),
+          ...(dependencies.cwd ? { cwd: dependencies.cwd } : {}),
+          ...(dependencies.execFile ? { execFile: dependencies.execFile } : {}),
+        });
+        const result = await reviewRepository(options);
         return {
           exitCode: 0,
           stdout: result.stdout,

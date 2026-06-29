@@ -4,30 +4,31 @@ import { GithubTriageError } from "../src/core/errors.js";
 import { parseCliArgs } from "../src/cli/options.js";
 
 describe("parseCliArgs", () => {
-  const now = new Date("2026-06-28T12:00:00.000Z");
-
   it("parses help and version commands", () => {
-    expect(parseCliArgs([], now)).toEqual({ command: "help" });
-    expect(parseCliArgs(["--help"], now)).toEqual({ command: "help" });
-    expect(parseCliArgs(["--version"], now)).toEqual({ command: "version" });
+    expect(parseCliArgs([])).toEqual({ command: "help" });
+    expect(parseCliArgs(["--help"])).toEqual({ command: "help" });
+    expect(parseCliArgs(["--version"])).toEqual({ command: "version" });
   });
 
-  it("parses a valid review invocation with defaults", () => {
-    expect(parseCliArgs(["review", "jeremyaaron/pkg-guard", "--since", "30d"], now)).toEqual({
+  it("parses an explicit review invocation", () => {
+    expect(parseCliArgs(["review", "jeremyaaron/pkg-guard", "--since", "30d"])).toEqual({
       command: "review",
-      options: {
+      args: {
         repo: {
           owner: "jeremyaaron",
           name: "pkg-guard",
         },
-        since: {
-          input: "30d",
-          days: 30,
-          sinceDate: "2026-05-29T12:00:00.000Z",
-        },
-        outputDir: ".github-triage/reports",
-        format: "all",
-        comments: 5,
+        since: "30d",
+        jsonSummary: false,
+      },
+    });
+  });
+
+  it("parses an implicit review invocation", () => {
+    expect(parseCliArgs(["review", "--since", "30d"])).toEqual({
+      command: "review",
+      args: {
+        since: "30d",
         jsonSummary: false,
       },
     });
@@ -43,6 +44,8 @@ describe("parseCliArgs", () => {
           "7d",
           "--output-dir",
           "reports",
+          "--report",
+          "none",
           "--format",
           "json",
           "--issues-file",
@@ -57,22 +60,17 @@ describe("parseCliArgs", () => {
           "gpt-test",
           "--json",
         ],
-        now,
       ),
     ).toEqual({
       command: "review",
-      options: {
+      args: {
         repo: {
           owner: "jeremyaaron",
           name: "pkg-guard",
         },
-        since: {
-          input: "7d",
-          days: 7,
-          sinceDate: "2026-06-21T12:00:00.000Z",
-        },
+        since: "7d",
         outputDir: "reports",
-        format: "json",
+        report: "json",
         issuesFile: "fixtures/issues.json",
         comments: 0,
         reportId: "fixture",
@@ -83,50 +81,80 @@ describe("parseCliArgs", () => {
     });
   });
 
+  it("accepts --report values", () => {
+    for (const report of ["none", "markdown", "json", "all"]) {
+      expect(parseCliArgs(["review", "owner/repo", "--since", "30d", "--report", report])).toMatchObject({
+        command: "review",
+        args: {
+          report,
+        },
+      });
+    }
+  });
+
   it("rejects invalid commands", () => {
-    expectCliError(() => parseCliArgs(["triage"], now), "cli.invalid-command");
+    expectCliError(() => parseCliArgs(["triage"]), "cli.invalid-command");
   });
 
   it("rejects invalid repo slugs", () => {
-    expectCliError(() => parseCliArgs(["review", "pkg-guard", "--since", "30d"], now), "cli.invalid-repo");
+    expectCliError(() => parseCliArgs(["review", "pkg-guard", "--since", "30d"]), "cli.invalid-repo");
   });
 
-  it("rejects missing and invalid durations", () => {
-    expectCliError(() => parseCliArgs(["review", "owner/repo"], now), "cli.invalid-duration");
+  it("does not validate missing or invalid durations during syntactic parsing", () => {
+    expect(parseCliArgs(["review", "owner/repo"])).toEqual({
+      command: "review",
+      args: {
+        repo: {
+          owner: "owner",
+          name: "repo",
+        },
+        jsonSummary: false,
+      },
+    });
+    expect(parseCliArgs(["review", "owner/repo", "--since", "1w"])).toMatchObject({
+      command: "review",
+      args: {
+        since: "1w",
+      },
+    });
+  });
+
+  it("rejects invalid report and format values", () => {
     expectCliError(
-      () => parseCliArgs(["review", "owner/repo", "--since", "1w"], now),
-      "cli.invalid-duration",
+      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--report", "xml"]),
+      "cli.invalid-format",
     );
-  });
-
-  it("rejects invalid formats", () => {
     expectCliError(
-      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--format", "xml"], now),
+      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--format", "xml"]),
+      "cli.invalid-format",
+    );
+    expectCliError(
+      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--format", "none"]),
       "cli.invalid-format",
     );
   });
 
   it("rejects invalid comments counts", () => {
     expectCliError(
-      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--comments", "21"], now),
+      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--comments", "21"]),
       "cli.invalid-comments",
     );
     expectCliError(
-      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--comments", "-1"], now),
+      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--comments", "-1"]),
       "cli.invalid-comments",
     );
   });
 
   it("rejects invalid report ids", () => {
     expectCliError(
-      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--report-id", "../x"], now),
+      () => parseCliArgs(["review", "owner/repo", "--since", "30d", "--report-id", "../x"]),
       "cli.invalid-report-id",
     );
   });
 
   it("rejects missing option values", () => {
     expectCliError(
-      () => parseCliArgs(["review", "owner/repo", "--since"], now),
+      () => parseCliArgs(["review", "owner/repo", "--since"]),
       "cli.invalid-command",
     );
   });

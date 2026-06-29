@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { GithubTriageError } from "../src/core/errors.js";
 import type { ReviewCliOptions } from "../src/cli/options.js";
 import { runCli } from "../src/cli/run.js";
+import type { RepositoryExecFile } from "../src/repository/detect.js";
 
 describe("runCli", () => {
   const now = new Date("2026-06-28T12:00:00.000Z");
@@ -12,14 +13,14 @@ describe("runCli", () => {
 
     expect(result.exitCode).toBe(0);
     expect(result.stderr).toBe("");
-    expect(result.stdout).toContain("github-triage 0.1.0");
-    expect(result.stdout).toContain("github-triage review <owner>/<repo> --since <duration>");
+    expect(result.stdout).toContain("github-triage 0.2.0");
+    expect(result.stdout).toContain("github-triage review [owner/repo] --since <duration>");
   });
 
   it("renders version", async () => {
     await expect(runCli(["--version"], { now })).resolves.toEqual({
       exitCode: 0,
-      stdout: "0.1.0\n",
+      stdout: "0.2.0\n",
       stderr: "",
     });
   });
@@ -29,6 +30,7 @@ describe("runCli", () => {
 
     const result = await runCli(["review", "jeremyaaron/pkg-guard", "--since", "30d"], {
       now,
+      execFile: notGitRepositoryExecFile,
       reviewRepository: async (options) => {
         received = options;
         return { stdout: "review output\n" };
@@ -51,10 +53,35 @@ describe("runCli", () => {
         sinceDate: "2026-05-29T12:00:00.000Z",
       },
       outputDir: ".github-triage/reports",
+      report: "all",
       format: "all",
       comments: 5,
       jsonSummary: false,
     });
+  });
+
+  it("resolves an implicit repository before calling reviewRepository", async () => {
+    let received: ReviewCliOptions | undefined;
+
+    const result = await runCli(["review", "--since", "30d"], {
+      now,
+      cwd: "/work/project",
+      execFile: createRepositoryExecFile({
+        "rev-parse --show-toplevel": "/work/project\n",
+        "remote -v": "origin\thttps://github.com/owner/repo.git (fetch)\n",
+      }),
+      reviewRepository: async (options) => {
+        received = options;
+        return { stdout: "review output\n" };
+      },
+    });
+
+    expect(result.exitCode).toBe(0);
+    expect(received?.repo).toEqual({
+      owner: "owner",
+      name: "repo",
+    });
+    expect(received?.projectRoot).toBe("/work/project");
   });
 
   it("passes --json through to reviewRepository", async () => {
@@ -62,6 +89,7 @@ describe("runCli", () => {
 
     const result = await runCli(["review", "owner/repo", "--since", "7d", "--json"], {
       now,
+      execFile: notGitRepositoryExecFile,
       reviewRepository: async (options) => {
         received = options;
         return { stdout: '{"ok":true}\n' };
@@ -86,6 +114,7 @@ describe("runCli", () => {
   it("maps operational review errors to exit code 1", async () => {
     const result = await runCli(["review", "owner/repo", "--since", "30d"], {
       now,
+      execFile: notGitRepositoryExecFile,
       reviewRepository: async () => {
         throw new GithubTriageError({
           code: "github.api-failed",
@@ -101,10 +130,42 @@ describe("runCli", () => {
   });
 
   it("returns an auth error for GitHub source without credentials", async () => {
-    const result = await runCli(["review", "owner/repo", "--since", "30d"], { now });
+    const result = await runCli(["review", "owner/repo", "--since", "30d"], {
+      now,
+      execFile: notGitRepositoryExecFile,
+    });
 
     expect(result.exitCode).toBe(1);
     expect(result.stderr).toContain("error github.auth-missing");
     expect(result.stderr).toContain("Set GITHUB_TOKEN or run `gh auth login`");
   });
 });
+
+type ExecOutput =
+  | string
+  | {
+      error: Error;
+      stderr?: string;
+    };
+
+const notGitRepositoryExecFile: RepositoryExecFile = (_file, _args, _options, callback) => {
+  callback(new Error("fatal: not a git repository"), "", "fatal: not a git repository");
+};
+
+function createRepositoryExecFile(outputs: Record<string, ExecOutput>): RepositoryExecFile {
+  return (_file, args, _options, callback) => {
+    const output = outputs[args.join(" ")];
+
+    if (output === undefined) {
+      callback(new Error(`Unexpected command: ${args.join(" ")}`), "", "");
+      return;
+    }
+
+    if (typeof output === "string") {
+      callback(null, output, "");
+      return;
+    }
+
+    callback(output.error, "", output.stderr ?? "");
+  };
+}

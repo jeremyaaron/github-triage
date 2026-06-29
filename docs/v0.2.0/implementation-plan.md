@@ -313,7 +313,34 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed.
+- Refactored `src/cli/options.ts` so parsing produces raw `ParsedReviewArgs` and allows
+  `review [owner/repo]`.
+- Added `--report <none|markdown|json|all>` parsing.
+- Kept `--format <markdown|json|all>` as a compatibility alias and rejected
+  `--format none`.
+- Added `src/cli/resolve-options.ts` to combine parsed CLI args, repository detection,
+  fixture repository fallback, project config, and defaults into `ReviewCliOptions`.
+- Resolution behavior now supports:
+  - implicit repo detection from git remotes;
+  - explicit `owner/repo` from arbitrary directories;
+  - fixture repository metadata fallback when no repo can be detected;
+  - config values when CLI values are absent;
+  - CLI values overriding config values;
+  - `since` validation after config resolution.
+- Updated `src/cli/run.ts` to resolve options before calling review execution.
+- Updated help/version output for v0.2.0 and the optional repo syntax.
+- Added `tests/cli-resolve-options.test.ts`.
+- Updated `tests/cli-options.test.ts`, `tests/cli-run.test.ts`, and `tests/smoke.test.ts`.
+- Exported resolver, parsed args, and report artifact types from `src/index.ts`.
+- Added preliminary `ReportArtifactFormat` and `report` option plumbing while preserving
+  v0.1 default report behavior until Phase 4 changes output defaults.
+- Verification passed:
+  - `npm test -- tests/cli-options.test.ts tests/cli-resolve-options.test.ts tests/cli-run.test.ts`
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm test`
+  - `npm run build`
 
 ## Phase 4: Report Output Modes
 
