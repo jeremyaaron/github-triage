@@ -228,7 +228,31 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed.
+- Added `src/config/project-config.ts` with `.github-triage.json` loading from an
+  explicit project root.
+- Added strict `projectConfigSchema` support for:
+  - `since`;
+  - `comments`;
+  - `report`;
+  - `outputDir`;
+  - `reportId`;
+  - `model`.
+- Added `projectConfigFileName`, `ProjectConfig`, and `ReadProjectConfigOptions`.
+- Added config error codes:
+  - `config.invalid-json`;
+  - `config.invalid-shape`.
+- Missing config files return an empty config.
+- Invalid JSON, unsupported keys, invalid values, invalid report ids, secret-looking
+  fields, and `captureDir` fail with config-specific errors.
+- Exported project config helpers and types from `src/index.ts`.
+- Added `tests/project-config.test.ts`.
+- Verification passed:
+  - `npm test -- tests/project-config.test.ts`
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm test`
+  - `npm run build`
 
 ## Phase 3: CLI Parsing And Option Resolution
 

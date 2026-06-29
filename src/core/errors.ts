@@ -10,6 +10,8 @@ export type GithubTriageErrorCode =
   | "repo.detect-missing"
   | "repo.detect-ambiguous"
   | "repo.git-failed"
+  | "config.invalid-json"
+  | "config.invalid-shape"
   | "github.auth-missing"
   | "github.repo-not-found"
   | "github.rate-limited"

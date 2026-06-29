@@ -55,6 +55,13 @@ export {
   type RunCliDependencies,
 } from "./cli/run.js";
 export {
+  projectConfigFileName,
+  projectConfigSchema,
+  readProjectConfig,
+  type ProjectConfig,
+  type ReadProjectConfigOptions,
+} from "./config/project-config.js";
+export {
   GithubTriageError,
   createUsageError,
   isGithubTriageError,
