@@ -24,7 +24,7 @@ describe("report path planning", () => {
   it("plans Markdown and JSON paths by default output directory", () => {
     const plan = planReportPaths({
       repo,
-      format: "all",
+      report: "all",
       reportId: "fixture",
     });
 
@@ -47,10 +47,23 @@ describe("report path planning", () => {
     });
   });
 
+  it("plans no report files when report output is none", () => {
+    const plan = planReportPaths({
+      repo,
+      report: "none",
+      outputDir: "reports",
+      reportId: "terminal",
+    });
+
+    expect(plan.files).toEqual([]);
+    expect(plan.markdownPath).toBeUndefined();
+    expect(plan.jsonPath).toBeUndefined();
+  });
+
   it("plans Markdown-only report paths", () => {
     const plan = planReportPaths({
       repo,
-      format: "markdown",
+      report: "markdown",
       outputDir: "reports",
       reportId: "manual",
     });
@@ -68,7 +81,7 @@ describe("report path planning", () => {
   it("plans JSON-only report paths", () => {
     const plan = planReportPaths({
       repo,
-      format: "json",
+      report: "json",
       outputDir: "reports",
       reportId: "machine",
     });
@@ -86,7 +99,7 @@ describe("report path planning", () => {
   it("uses the current time when report id is omitted", () => {
     const plan = planReportPaths({
       repo,
-      format: "json",
+      report: "json",
       now: new Date("2026-06-28T15:30:05.000Z"),
     });
 
@@ -100,7 +113,7 @@ describe("report path planning", () => {
     expect(() =>
       planReportPaths({
         repo,
-        format: "json",
+        report: "json",
         reportId: "../outside",
       }),
     ).toThrow(GithubTriageError);

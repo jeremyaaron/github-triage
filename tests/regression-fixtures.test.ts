@@ -151,7 +151,7 @@ describe("regression fixtures", () => {
         repo: { owner: "jeremyaaron", name: "pkg-guard" },
         since: parseDurationWindow("30d", new Date("2026-06-28T12:00:00.000Z")),
         outputDir,
-        format: "all",
+        report: "all",
         issuesFile: issueFixturePath(fixture.id),
         comments: 5,
         reportId: fixture.id,

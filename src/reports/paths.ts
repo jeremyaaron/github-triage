@@ -9,7 +9,7 @@ export type ReportArtifactFormat = "none" | ReportFormat;
 
 export interface ReportPathPlanOptions {
   repo: RepoSlug;
-  format: ReportArtifactFormat;
+  report: ReportArtifactFormat;
   outputDir?: string;
   reportId?: string;
   now?: Date;
@@ -47,7 +47,7 @@ export function planReportPaths(options: ReportPathPlanOptions): ReportPathPlan 
     ? parseReportId(options.reportId)
     : createDefaultReportId(options.now);
   const baseName = `${repo.owner}-${repo.name}-${reportId}`;
-  const files = createReportFiles(outputDir, baseName, options.format);
+  const files = createReportFiles(outputDir, baseName, options.report);
   const markdownPath = files.find((file) => file.format === "markdown")?.path;
   const jsonPath = files.find((file) => file.format === "json")?.path;
 

@@ -384,7 +384,25 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed.
+- Migrated review and report path planning from `format` inputs to `report` artifact
+  mode.
+- Added `ReportArtifactFormat = "none" | "markdown" | "json" | "all"`.
+- Updated `planReportPaths` to accept `report` and return no files for `report: "none"`.
+- Updated `ReviewCliOptions` and `ReviewOptions` to use `report` as the artifact field.
+- Changed resolved default review behavior to `report: "none"`.
+- Kept `--format` only as a CLI compatibility alias for `--report`.
+- Updated review orchestration so `report: "none"` creates no report files and does not
+  create the output directory.
+- Updated tests and call sites to request `report: "all"`, `report: "json"`, or
+  `report: "markdown"` when asserting file artifacts.
+- Added coverage for terminal-only review output and no output directory creation.
+- Verification passed:
+  - `npm test -- tests/report-paths.test.ts tests/review-offline.test.ts tests/review-github.test.ts tests/regression-fixtures.test.ts`
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm test`
+  - `npm run build`
 
 ## Phase 5: Terminal-First Output
 

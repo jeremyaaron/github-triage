@@ -53,8 +53,7 @@ describe("runCli", () => {
         sinceDate: "2026-05-29T12:00:00.000Z",
       },
       outputDir: ".github-triage/reports",
-      report: "all",
-      format: "all",
+      report: "none",
       comments: 5,
       jsonSummary: false,
     });

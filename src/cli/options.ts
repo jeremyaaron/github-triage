@@ -5,14 +5,13 @@ import {
   type DurationWindow,
   type RepoSlug,
 } from "../core/schemas.js";
-import type { ReportArtifactFormat, ReportFormat } from "../reports/paths.js";
+import type { ReportArtifactFormat } from "../reports/paths.js";
 
 export interface ReviewCliOptions {
   repo: RepoSlug;
   since: DurationWindow;
   outputDir: string;
   report: ReportArtifactFormat;
-  format: ReportFormat;
   issuesFile?: string;
   comments: number;
   reportId?: string;
@@ -195,7 +194,7 @@ function parseReport(input: string): ReportArtifactFormat {
   );
 }
 
-function parseLegacyFormat(input: string): ReportFormat {
+function parseLegacyFormat(input: string): Exclude<ReportArtifactFormat, "none"> {
   if (input === "markdown" || input === "json" || input === "all") {
     return input;
   }

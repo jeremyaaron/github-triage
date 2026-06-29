@@ -20,7 +20,7 @@ describe("GitHub review source", () => {
       repo: { owner: "jeremyaaron", name: "pkg-guard" },
       since: parseDurationWindow("30d", now),
       outputDir: path.join(dir, "reports"),
-      format: "json",
+      report: "json",
       comments: 0,
       reportId: "github",
       jsonSummary: false,

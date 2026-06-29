@@ -190,7 +190,7 @@ describe("Markdown report rendering", () => {
 describe("terminal summary rendering", () => {
   const paths = planReportPaths({
     repo: report.repository,
-    format: "all",
+    report: "all",
     reportId: "fixture",
   });
 

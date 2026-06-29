@@ -3,11 +3,7 @@ import { createUsageError, isGithubTriageError } from "../core/errors.js";
 import { parseReportId, type RepoSlug } from "../core/schemas.js";
 import { readProjectConfig } from "../config/project-config.js";
 import { readIssueSourceFile } from "../fixtures/issue-source.js";
-import {
-  defaultReportOutputDir,
-  type ReportArtifactFormat,
-  type ReportFormat,
-} from "../reports/paths.js";
+import { defaultReportOutputDir } from "../reports/paths.js";
 import {
   detectGitHubRepository,
   type RepositoryContext,
@@ -36,7 +32,7 @@ export async function resolveReviewCliOptions(
     );
   }
 
-  const report = parsed.report ?? config.report ?? "all";
+  const report = parsed.report ?? config.report ?? "none";
   const reportId = parsed.reportId ?? config.reportId;
   const model = parsed.model ?? config.model;
 
@@ -49,7 +45,6 @@ export async function resolveReviewCliOptions(
     since: parseDurationWindow(sinceInput, dependencies.now),
     outputDir: parsed.outputDir ?? config.outputDir ?? defaultReportOutputDir,
     report,
-    format: reportToLegacyFormat(report),
     ...(parsed.issuesFile ? { issuesFile: parsed.issuesFile } : {}),
     comments: parsed.comments ?? config.comments ?? 5,
     ...(reportId ? { reportId } : {}),
@@ -122,8 +117,4 @@ function createDetectRepositoryOptions(
     ...(dependencies.cwd ? { cwd: dependencies.cwd } : {}),
     ...(dependencies.execFile ? { execFile: dependencies.execFile } : {}),
   };
-}
-
-function reportToLegacyFormat(report: ReportArtifactFormat): ReportFormat {
-  return report === "none" ? "all" : report;
 }

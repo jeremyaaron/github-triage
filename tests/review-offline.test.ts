@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, readdir, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
@@ -23,7 +23,7 @@ describe("offline review orchestration", () => {
       repo: { owner: "jeremyaaron", name: "pkg-guard" },
       since: parseDurationWindow("30d", now),
       outputDir,
-      format: "all",
+      report: "all",
       issuesFile: fixturePath,
       comments: 5,
       reportId: "test",
@@ -64,7 +64,7 @@ describe("offline review orchestration", () => {
       repo: { owner: "jeremyaaron", name: "pkg-guard" },
       since: parseDurationWindow("30d", now),
       outputDir: path.join(dir, "reports"),
-      format: "json",
+      report: "json",
       issuesFile: fixturePath,
       comments: 5,
       reportId: "json-summary",
@@ -80,6 +80,30 @@ describe("offline review orchestration", () => {
     });
   });
 
+  it("does not write report files when report output is none", async () => {
+    const dir = await mkdtemp(path.join(os.tmpdir(), "github-triage-review-"));
+    const fixturePath = path.join(dir, "issues.json");
+    const outputDir = path.join(dir, "reports");
+    await writeFile(fixturePath, JSON.stringify(createFixtureDocument()), "utf8");
+
+    const result = await reviewRepository({
+      repo: { owner: "jeremyaaron", name: "pkg-guard" },
+      since: parseDurationWindow("30d", now),
+      outputDir,
+      report: "none",
+      issuesFile: fixturePath,
+      comments: 5,
+      reportId: "terminal-only",
+      jsonSummary: false,
+      clock: () => now,
+      analyzer: createFakeAnalyzer(),
+    });
+
+    expect(result.paths.files).toEqual([]);
+    expect(result.stdout).not.toContain("Reports:");
+    await expect(readdir(outputDir)).rejects.toMatchObject({ code: "ENOENT" });
+  });
+
   it("maps report write failures to report.write-failed", async () => {
     const dir = await mkdtemp(path.join(os.tmpdir(), "github-triage-review-"));
     const fixturePath = path.join(dir, "issues.json");
@@ -92,7 +116,7 @@ describe("offline review orchestration", () => {
         repo: { owner: "jeremyaaron", name: "pkg-guard" },
         since: parseDurationWindow("30d", now),
         outputDir: blockedOutputPath,
-        format: "all",
+        report: "all",
         issuesFile: fixturePath,
         comments: 5,
         reportId: "test",
@@ -121,6 +145,8 @@ describe("offline review orchestration", () => {
       fixturePath,
       "--output-dir",
       outputDir,
+      "--report",
+      "all",
       "--report-id",
       "test",
     ];

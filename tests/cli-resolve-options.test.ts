@@ -38,8 +38,7 @@ describe("resolveReviewCliOptions", () => {
         sinceDate: "2026-05-29T12:00:00.000Z",
       },
       outputDir: ".github-triage/reports",
-      report: "all",
-      format: "all",
+      report: "none",
       comments: 5,
       jsonSummary: false,
       projectRoot: "/work/project",
@@ -80,7 +79,6 @@ describe("resolveReviewCliOptions", () => {
         sinceDate: "2026-06-21T12:00:00.000Z",
       },
       report: "json",
-      format: "json",
       comments: 0,
       jsonSummary: true,
     });
@@ -152,7 +150,6 @@ describe("resolveReviewCliOptions", () => {
       },
       outputDir: "reports",
       report: "markdown",
-      format: "markdown",
       comments: 0,
       reportId: "weekly",
       model: "gpt-test",
@@ -197,7 +194,6 @@ describe("resolveReviewCliOptions", () => {
       },
       outputDir: "cli-reports",
       report: "all",
-      format: "all",
       comments: 2,
       reportId: "cli",
       model: "gpt-cli",
@@ -251,7 +247,7 @@ describe("resolveReviewCliOptions", () => {
     });
   });
 
-  it("keeps report none while mapping legacy format for current review execution", async () => {
+  it("resolves report none without requesting report artifacts", async () => {
     const options = await resolveReviewCliOptions(
       {
         repo: {
@@ -274,7 +270,6 @@ describe("resolveReviewCliOptions", () => {
     );
 
     expect(options.report).toBe("none");
-    expect(options.format).toBe("all");
   });
 });
 

@@ -12,7 +12,7 @@ Usage:
 
 Options:
   --since <duration>        Review open issues created or updated since duration ago.
-  --report <format>         none, markdown, json, or all. Default: all.
+  --report <format>         none, markdown, json, or all. Default: none.
   --output-dir <path>       Report output directory. Default: .github-triage/reports.
   --format <format>         Deprecated alias for --report. Supports markdown, json, or all.
   --issues-file <path>      Read issue-source JSON from disk instead of GitHub.
