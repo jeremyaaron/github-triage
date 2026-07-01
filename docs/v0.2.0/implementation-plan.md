@@ -449,7 +449,29 @@ npm run typecheck
 
 Status:
 
-- Not started.
+- Completed.
+- Updated `src/reports/terminal.ts` so plain terminal output includes compact issue
+  rows after the aggregate counts.
+- Added terminal row status selection for:
+  - avoid public reply;
+  - security review;
+  - likely duplicate;
+  - needs reproduction;
+  - needs reply;
+  - ready for review.
+- Kept terminal output plain ASCII and non-colored.
+- Added the same compact issue rows to terminal JSON output with issue number, title,
+  classification, status, labels, and URL.
+- Preserved conditional report path rendering: terminal output includes `Reports:` only
+  when report artifacts are written.
+- Updated report rendering tests for issue rows, terminal JSON issue rows, status
+  selection priority, and no-report-path behavior.
+- Verification passed:
+  - `npm test -- tests/report-rendering.test.ts tests/review-offline.test.ts tests/cli-run.test.ts`
+  - `npm run typecheck`
+  - `npm run lint`
+  - `npm test`
+  - `npm run build`
 
 ## Phase 6: Package Consumer Documentation
 

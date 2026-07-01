@@ -202,6 +202,10 @@ Likely duplicates: 1
 Needs maintainer reply: 1
 Missing reproduction: 1
 
+Issues:
+  #12  bug       likely duplicate    labels: bug
+  #13  security  avoid public reply  labels: security
+
 Reports:
   .github-triage/reports/jeremyaaron-pkg-guard-fixture.md
   .github-triage/reports/jeremyaaron-pkg-guard-fixture.json
@@ -218,6 +222,24 @@ Reports:
       likelyDuplicates: 1,
       needsMaintainerReply: 1,
       missingReproduction: 1,
+      issues: [
+        {
+          number: 12,
+          title: "Exports map missing types",
+          classification: "bug",
+          status: "likely duplicate",
+          labels: ["bug"],
+          url: "https://github.com/jeremyaaron/pkg-guard/issues/12",
+        },
+        {
+          number: 13,
+          title: "Possible token exposure",
+          classification: "security",
+          status: "avoid public reply",
+          labels: ["security"],
+          url: "https://github.com/jeremyaaron/pkg-guard/issues/13",
+        },
+      ],
       reports: [
         {
           format: "markdown",
@@ -230,4 +252,113 @@ Reports:
       ],
     });
   });
+
+  it("selects deterministic primary statuses for terminal rows", () => {
+    const statusReport: ReviewReport = {
+      ...report,
+      summary: {
+        issueCount: 4,
+        securitySensitive: 1,
+        likelyDuplicates: 0,
+        needsMaintainerReply: 1,
+        missingReproduction: 1,
+      },
+      issues: [
+        createStatusIssue(21, "bug", {
+          missing: true,
+        }),
+        createStatusIssue(22, "support", {
+          draft: true,
+        }),
+        createStatusIssue(23, "feature", {}),
+        createStatusIssue(24, "security", {
+          security: true,
+          publicReplyAllowed: true,
+        }),
+      ],
+    };
+
+    const rendered = renderTerminalSummary(statusReport);
+
+    expect(rendered).toContain("  #21  bug       needs reproduction  labels: bug");
+    expect(rendered).toContain("  #22  support   needs reply         labels: question");
+    expect(rendered).toContain("  #23  feature   ready for review    labels: enhancement");
+    expect(rendered).toContain("  #24  security  security review     labels: security");
+    expect(rendered).not.toContain("Reports:");
+  });
 });
+
+function createStatusIssue(
+  number: number,
+  classification: ReviewReport["issues"][number]["recommendation"]["classification"],
+  options: {
+    missing?: boolean;
+    draft?: boolean;
+    security?: boolean;
+    publicReplyAllowed?: boolean;
+  },
+): ReviewReport["issues"][number] {
+  const labelByClassification = {
+    bug: "bug",
+    dependency: "dependencies",
+    documentation: "documentation",
+    feature: "enhancement",
+    maintenance: "maintenance",
+    security: "security",
+    support: "question",
+    unclear: "needs triage",
+  };
+
+  return {
+    source: {
+      number,
+      title: `Issue ${number}`,
+      body: "Body",
+      author: "octocat",
+      state: "open",
+      labels: [],
+      createdAt: "2026-01-01T00:00:00.000Z",
+      updatedAt: "2026-01-02T00:00:00.000Z",
+      commentCount: 0,
+      url: `https://github.com/jeremyaaron/pkg-guard/issues/${number}`,
+      comments: [],
+    },
+    recommendation: {
+      issueNumber: number,
+      classification,
+      confidence: "high",
+      signals: [],
+      suggestedLabels: [
+        {
+          name: labelByClassification[classification],
+          confidence: "high",
+          rationale: "Suggested from classification.",
+          exists: true,
+        },
+      ],
+      missingInformation: options.missing
+        ? [
+            {
+              kind: "minimal-reproduction",
+              question: "Can you share a minimal reproduction?",
+            },
+          ]
+        : [],
+      relatedIssues: [],
+      draftReply: options.draft
+        ? {
+            body: "Thanks for the report.",
+            rationale: "A maintainer reply is useful.",
+          }
+        : null,
+      security: {
+        sensitive: options.security ?? false,
+        confidence: "high",
+        rationale: "Security status for terminal rendering.",
+        publicReplyAllowed: options.publicReplyAllowed ?? true,
+      },
+      rationale: "Terminal rendering fixture.",
+      warnings: [],
+    },
+  };
+}
